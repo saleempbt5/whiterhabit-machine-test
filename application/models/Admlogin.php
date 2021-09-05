@@ -31,7 +31,7 @@ class Admlogin extends CI_Model
 		if (password_verify($this->_password, $result['password'])) {
 		    
 			$data['logged_in'] = true;
-			$data['Nyid']      =  $result['id'];
+			$data['id']      =  $result['id'];
 			if($result['roleid'] == 1)
 			{
 			$data['superadmin']  =  true;				  
@@ -49,7 +49,7 @@ class Admlogin extends CI_Model
 			$data['roleid']     =  $result['roleid'];
 		    $this->session->set_userdata($data);
             return TRUE;
-               die();
+               
 		}
 		else
 		{

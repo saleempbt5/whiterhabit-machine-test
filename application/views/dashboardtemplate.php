@@ -12,6 +12,10 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   
   <link rel="stylesheet" href="<?php echo  base_url('Appresources/dist/css/adminlte.min.css?ver=1.1'); ?>">
+  <!-- Select2 -->
+  <link rel="stylesheet" href="<?php echo  base_url('Appresources/plugins/select2/css/select2.min.css'); ?>">
+  <link rel="stylesheet" href="<?php echo  base_url('Appresources/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
+
   <?php echo  $_styles ?> 
    <script type="text/javascript">
     var csrf_token_name = '<?php echo $this->security->get_csrf_token_name(); ?>';
@@ -55,10 +59,23 @@
 <!-- Bootstrap 4 -->
 <script src="<?php echo  base_url('Appresources/plugins/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
 
+<!-- Select2 -->
+<script src="<?php echo  base_url('Appresources/plugins/select2/js/select2.full.min.js'); ?>"></script>
+
 <!-- AdminLTE App -->
 <script src="<?php echo  base_url('Appresources/dist/js/adminlte.js'); ?>"></script>
 
+<script>
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+	})
+
+</script>
  <?php echo  $_scripts ?>
+
+
 </body>
 </html>
 

@@ -60,7 +60,8 @@ class Admusers extends CI_Model
     $result=$query->row_array();
     $re=$result['uid'];
     $res=$re+1;
-    $dt="WR".sprintf('%4d',$res) ;
+    $dt="wrtest".sprintf('%04d',$res) ;
+	//	echo $dt; die();
     $string=$value['usercpswdid'];
     $pswd=password_hash($string, PASSWORD_DEFAULT); 
     $time=date('Y-m-d H:i:s');
@@ -80,7 +81,16 @@ class Admusers extends CI_Model
     $qry=$this->db->insert('wh_users',$data);
     return $qry;
   }
+	function already_exists_admin($val)
+  {
+    $wh="(phoneno='".$val['userphone']."' OR email='".$val['useremail']."' OR username='".$val['username']."')";
+    $this->db->select('phoneno,email');
+    $this->db->where($wh);
+    $query=$this->db->get('wh_users');
+    $res=$query->num_rows();
+    return $res;
    
+  }
 
 
 
@@ -120,17 +130,9 @@ class Admusers extends CI_Model
     $this->db->select('phoneno,email');
     $this->db->where($wh);
     $query=$this->db->get('wh_users');
-  
     $res=$query->num_rows();
     return $res;
-    // phn=$val['userphone'];
-    // $em=$val['useremail'];
-    // $wh="phoneno='$phn' OR email='$em'";
-    // $this->db->select('phoneno,email');
-    
-    // $query=$this->db->get_where('wh_users',$wh);
-    // $res=$query->row_array();
-    // return $res;
+   
   }
   function editalready_exists($value)
   {
@@ -161,8 +163,7 @@ class Admusers extends CI_Model
     $pswd=password_hash($str, PASSWORD_DEFAULT);
     $this->db->where('id',$id);
     $qry=$this->db->update('wh_users',array('password'=>$pswd));
-    // print_r($qry); die();
-    
+  
     return $qry;
     
   }

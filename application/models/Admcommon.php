@@ -50,13 +50,7 @@ class Admcommon extends CI_Model
                 }
                 else if($this->router->class == 'users'){
                     redirect('login');
-                }else if($this->router->class == 'menus'){
-                    redirect('login');
-                }else if($this->router->class == 'works'){
-                    redirect('login');
-                }else if($this->router->class == 'myworks'){
-                    redirect('login');
-                }           
+                }
                 
             }           
             
@@ -163,6 +157,17 @@ class Admcommon extends CI_Model
 	 $resultary = $query->row_array();	
    return $resultary;
 	}
+  function readusers_exceptadmin()
+	{
+    $this->db->select('id, name, username');
+   $this->db->where('status', 1);
+	 $query = $this->db->get_where('wh_users', array('roleid' => 3));
+	 $resultary = $query->result_array();	
+   return $resultary;
+	}
+
+
+
   function readusergroup_byid($userid)
   {
    $query = $this->db->get_where('wh_user_groups', array('userid'=>$userid));
@@ -193,6 +198,121 @@ class Admcommon extends CI_Model
     return $query->result_array();
   }
   
+
+	function saveFiles($inputary)
+	{
+		$this->db->trans_start();
+	 $adddatetime=date('Y-m-d H:i:s');	    
+	 $admary = array(
+		'filename'=>$inputary['filename'],
+		'fileurl'=>$inputary['fileurl'],
+		 'createdat'=>$adddatetime,
+		 'updatedat'=>$adddatetime,
+		 'createdby'=>$this->session->userdata('id'));
+			$this->db->insert('wh_files', $admary);	
+			$lastid = '';
+			if($this->db->affected_rows() > 0)
+        {
+        	$lastid = $this->db->insert_id();
+        }
+				if(is_array($inputary['users']))
+				{
+         foreach($inputary['users'] as $user)
+				 {
+          $this->db->insert('file_permissions', array('fileid'=> $lastid, 'userid'=> $user, 'createdat'=>$adddatetime, 'updatedat'=>  $adddatetime));	
+
+				 }
+				}
+
+
+      $this->db->trans_complete();
+      if ($this->db->trans_status() === FALSE)
+			{
+				return false;
+			}else
+			{
+				return true;
+			}
+
+
+	} 
+
+
+	function allfiles()
+    {
+      $status=$this->input->post('status');
+     
+      $sql="SELECT A.id, A.filename, A.fileurl, B.name AS createdby FROM wh_files A LEFT JOIN wh_users B ON B.id = A.createdby WHERE A.status=$status";
+		
+      $query = $this->db->query($sql); 
+     // print_r($query->result_array());     
+      $res['num_rows']=$query->num_rows();
+      if($_POST['search']['value']!=''):
+           $like=$_POST['search']['value'];
+           
+             $sql.=" AND (A.filename like '%$like%')";
+              //  echo $sql;die();
+             $qr2=$this->db->query($sql);
+                $res['filter_rows']=$qr2->num_rows();
+           else:
+                $res['filter_rows']=$query->num_rows();
+            endif;
+         if(isset($_POST['order'])):
+                $odr=array(1=>'name',2=>'username');
+                $by=$_POST['order'][0]['column'];$dir=$_POST['order'][0]['dir'];
+                $sql.=" order by $odr[$by] $dir";
+            else:
+               $sql.=" order by A.createdat DESC";
+
+            endif;
+            if($_POST['length'] != -1):
+                $limit=$_POST['length'];
+                $start=$_POST['start'];
+                 $sql.=" limit $limit offset $start";
+                $query=$this->db->query($sql);
+                $res['result']=$query->result_array();
+            endif;
+           // print_r($res);
+            return $res;
+    }
   
+		function allmyfiles($id)
+    {
+      $status=$this->input->post('status');
+     
+      $sql="SELECT A.id, A.filename, A.fileurl, B.name AS createdby FROM wh_files A LEFT JOIN wh_users B ON B.id = A.createdby JOIN file_permissions C ON C.fileid = A.id WHERE A.status=$status AND C.userid = $id ";
+		 // echo $sql;die();
+      $query = $this->db->query($sql); 
+     // print_r($query->result_array());     
+      $res['num_rows']=$query->num_rows();
+      if($_POST['search']['value']!=''):
+           $like=$_POST['search']['value'];
+           
+             $sql.=" AND (A.filename like '%$like%')";
+              //  echo $sql;die();
+             $qr2=$this->db->query($sql);
+                $res['filter_rows']=$qr2->num_rows();
+           else:
+                $res['filter_rows']=$query->num_rows();
+            endif;
+         if(isset($_POST['order'])):
+                $odr=array(1=>'name',2=>'username');
+                $by=$_POST['order'][0]['column'];$dir=$_POST['order'][0]['dir'];
+                $sql.=" order by $odr[$by] $dir";
+            else:
+               $sql.=" order by A.createdat DESC";
+
+            endif;
+            if($_POST['length'] != -1):
+                $limit=$_POST['length'];
+                $start=$_POST['start'];
+                 $sql.=" limit $limit offset $start";
+                $query=$this->db->query($sql);
+                $res['result']=$query->result_array();
+            endif;
+           // print_r($res);
+            return $res;
+    }
+
 		
 }
