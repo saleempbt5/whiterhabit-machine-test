@@ -68,11 +68,11 @@ class Admcommon extends CI_Model
       if($this->isAdmin())
       {
        $this->db->order_by('wieght', 'ASC');
-       $queryr = $this->db->get_where('nz_menu_master', array('parent' => 0, 'status'=>1));
+       $queryr = $this->db->get_where('wh_menu_master', array('parent' => 0, 'status'=>1));
       }else{
       $this->db->select('A.roleid AS roleid, A.permission AS permission, B.menuname AS menuname, B.link AS link, B.iconclass AS iconclass, B.id AS id');
-      $this->db->from('nz_role_permissions A'); 
-      $this->db->join('nz_menu_master B', 'A.menuid = B.id', 'right');
+      $this->db->from('wh_role_permissions A'); 
+      $this->db->join('wh_menu_master B', 'A.menuid = B.id', 'right');
       $this->db->where('A.roleid', $roleid);
       $this->db->where('B.parent', 0);
       $this->db->where('A.status', 1);
@@ -94,7 +94,7 @@ class Admcommon extends CI_Model
 	{
 		$this->db->where('username', $userid);
     //$this->db->where('password', md5($password));
-		$query = $this->db->get('nz_users');
+		$query = $this->db->get('wh_users');
 		//$result = $query->row_array();
                 if($query->num_rows() > 0)
                    {
@@ -115,7 +115,7 @@ class Admcommon extends CI_Model
   function read_permissions($roleid)
   {
     
-  $sql       = 'SELECT * FROM `nz_role_permissions` A WHERE A.roleid='.$roleid.'';        
+  $sql       = 'SELECT * FROM `wh_role_permissions` A WHERE A.roleid='.$roleid.'';        
   $query     = $this->db->query($sql); 
   $resultary = $query->result_array();
  // $flatted_ary  = $this->m_flatten($resultary, 'permission'); 
@@ -159,13 +159,13 @@ class Admcommon extends CI_Model
     $this->db->select('name, username');
    $this->db->where('status', 1);
    
-	 $query = $this->db->get_where('nz_users', array('username' => $userid));
+	 $query = $this->db->get_where('wh_users', array('username' => $userid));
 	 $resultary = $query->row_array();	
    return $resultary;
 	}
   function readusergroup_byid($userid)
   {
-   $query = $this->db->get_where('nz_user_groups', array('userid'=>$userid));
+   $query = $this->db->get_where('wh_user_groups', array('userid'=>$userid));
              if($query->num_rows() > 0)
                     return $query->row_array();  
                 else
@@ -185,50 +185,14 @@ class Admcommon extends CI_Model
 		    'sourceobjid'=>$moduleid,
         'actiontime' => $adddatetime,
       );	
-    $this->db->insert('nz_user_actionlog', $data);	
+    $this->db->insert('wh_user_actionlog', $data);	
     }
   function readallactivemenus()
   {
-    $query = $this->db->get_where('nz_menu_master', array('status'=>1));
+    $query = $this->db->get_where('wh_menu_master', array('status'=>1));
     return $query->result_array();
   }
-  function statistics()
-  {
-    $this->db->select('id,workid,status');
-    $qry1=$this->db->get('nz_works');
-    $count=$qry1->num_rows();
-    $datetym=date('Y-m-d H:i:s');  
-    $this->db->select('id,workid,completiondate,status');
-    $qry2=$this->db->get_where('nz_works',array('status'=>0,'completiondate >='=>$datetym,));
-    $expired=$qry2->num_rows();
-    $this->db->select('id,workid,completiondate,status');
-    $qry3=$this->db->get_where('nz_works',array('status'=>1,'completiondate >='=>$datetym));
-    $onprogress=$qry3->num_rows();
-    $this->db->select('id,workid,completiondate,status');
-    $qry4=$this->db->get_where('nz_works',array('status'=>2));
-    $completed=$qry4->num_rows();
-    //echo $completed; die();
-    $data=array('total'=>$count,'wrkassign'=>$expired,'wrkprogress'=>$onprogress,'wrkcomplete'=>$completed);
-    return $data;
-   
-  }
-  function user_statistics($usrid)
-  {
-    $this->db->select('id,workid,userid,status');
-    $qry1=$this->db->get_where('nz_works',array('userid'=>$usrid));
-    $count=$qry1->num_rows();
-    $datetym=date('Y-m-d H:i:s'); 
-    $this->db->select('id,workid,completiondate,userid,status');
-    $qry2=$this->db->get_where('nz_works',array('status'=>0,'userid'=>$usrid,'completiondate >='=>$datetym,));
-    $expired=$qry2->num_rows();
-    $this->db->select('id,workid,completiondate,userid,status');
-    $qry3=$this->db->get_where('nz_works',array('status'=>1,'completiondate >='=>$datetym,'userid'=>$usrid));
-    $onprogress=$qry3->num_rows();
-    $this->db->select('id,workid,completiondate,userid,status');
-    $qry4=$this->db->get_where('nz_works',array('status'=>2,'userid'=>$usrid));
-    $completed=$qry4->num_rows();
-    $data=array('total'=>$count,'mywrkassign'=>$expired,'mywrkprogress'=>$onprogress,'mywrkcomplete'=>$completed);
-    return $data;
-  }
+  
+  
 		
 }

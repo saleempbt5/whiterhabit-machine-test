@@ -19,7 +19,7 @@ class Admlogin extends CI_Model
 	function login()
 	{		
 		$this->db->select('A.id, A.username, A.name, A.password,A.roleid');
-		$this->db->from('nz_users A');
+		$this->db->from('wh_users A');
 		$this->db->where('A.username', $this->_userid);
 		$this->db->where('A.status', 1);
 		$query = $this->db->get();

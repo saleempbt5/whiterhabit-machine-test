@@ -11,6 +11,7 @@ function __construct()
         $this->template->set_template('logintpl');	
         $this->template->write('title', 'Login - White Rabbit Group');
         $this->load->model('admcommon', '', TRUE); 
+		$this->load->model('admusers', '', TRUE);
         $this->config->load('credentials');   
         
       }
@@ -39,6 +40,20 @@ function __construct()
 	function logout() {
         $this->admlogin->logout();
     }
+
+	public function createAdmin()
+	{
+      $admin_details = array(
+		'name'=>"Admin",
+		'useremail'=>"admin@whiterabbit.com",'username'=>"wrAdmin",'userpassword'=>"admin123",'useradd'=>"xxxxxxxx",'userphone'=>'23323232','userrole'=>1,'status'=>1,'craetedby'=>1
+	  );
+	  $ins_ref=$this->admusers->createadmin($admin_details);
+	  if($ins_ref)
+	  {
+       echo "Admin created successfully! : username : wrAdmin \n Password : admin123 \n Please remove this function in production";
+	  }
+
+	}
 
     function passwordhashing()
     {

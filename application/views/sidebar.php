@@ -1,7 +1,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="<?php echo  site_url('dashboard'); ?>" class="brand-link">
-    IDE
+    WR
       <span class="brand-text font-weight-light"></span>
     </a>
 

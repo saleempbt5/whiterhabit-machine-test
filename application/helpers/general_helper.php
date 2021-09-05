@@ -23,13 +23,13 @@
        $queryr = '';
         if(Isadmin())
         {
-         $queryr = $db1->get_where('nz_menu_master', array('parent' => $id, 'status'=>1));
+         $queryr = $db1->get_where('wh_menu_master', array('parent' => $id, 'status'=>1));
         }
         else
         {
        $db1->select('A.roleid, A.permission AS permission, B.menuname AS menuname, B.link AS link, B.iconclass AS icon, B.id AS id');
-       $db1->from('nz_role_permissions A'); 
-       $db1->join('nz_menu_master B', 'A.menuid = B.id', 'left');
+       $db1->from('wh_role_permissions A'); 
+       $db1->join('wh_menu_master B', 'A.menuid = B.id', 'left');
        $db1->where('B.parent', $id);
        $db1->where('A.roleid', $ci->session->userdata('roleid'));
        $db1->where('A.status', 1);
@@ -60,14 +60,14 @@
        $queryr = '';
        if(Isadmin())
         {
-         $queryr = $db1->get_where('nz_menu_master', array('parent' => $id, 'status'=>1));
+         $queryr = $db1->get_where('wh_menu_master', array('parent' => $id, 'status'=>1));
         }
         else
         { 
 
        $db1->select('A.roleid, A.permission AS permission, B.menuname AS menuname, B.link AS menulink, B.iconclass AS icon, B.id AS menuid');
-       $db1->from('nz_role_permissions A'); 
-       $db1->join('nz_menu_master B', 'A.menuid = B.id', 'left');
+       $db1->from('wh_role_permissions A'); 
+       $db1->join('wh_menu_master B', 'A.menuid = B.id', 'left');
        $db1->where('B.parent', $id);
        $db1->where('A.roleid', $ci->session->userdata('roleid'));
        $db1->where('B.status', 1);
